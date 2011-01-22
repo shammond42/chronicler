@@ -2,8 +2,13 @@ module Chronicler
   module Configuration
     CONFIG_FILE = File.expand_path('~/.chronicler/config.yml')
     CONFIG_DIRECTORY = File.dirname(CONFIG_FILE)
-    
+
+    # App specific key and secret for access to the API
+    CONSUMER_KEY = '3Cvi9vXxnNFO2FfkT0aD'
+    CONSUMER_SECRET = 'eVRnQzEOxm6wDrFAZjtN7pGzEy5gi2TzQSfyudPw'
+
     def self.load
+      MageHand::Client.configure(CONSUMER_KEY, CONSUMER_SECRET)
       if directory_exists?
         
       else
