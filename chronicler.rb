@@ -3,8 +3,13 @@ require 'bundler/setup'
 
 require 'mage-hand'
 require 'OAuth' # Move this into mage-hand gem
-
 include MageHand
+
+require 'lib/configuration'
+
+include Chronicler
+
+Configuration.load
 
 # App specific key and secret for access to the API
 CONSUMER_KEY = '3Cvi9vXxnNFO2FfkT0aD'
@@ -21,8 +26,6 @@ print "Enter token: "
 print "Enter secret: "
 @auth_secret = STDIN.readline.chomp
 
-parameters = {:auth_token => @auth_token, :auth_secret => @auth_secret}
-
-File.open('config.yml', 'w') do |file|
-  file.puts(parameters.to_yaml)
-end
+Configuration.parameters[:auth_token] = @auth_token
+Configuration.parameters[:auth_secret] = @auth_secret
+Configuration.save
