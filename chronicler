@@ -8,15 +8,11 @@ require 'OAuth' # Move this into mage-hand gem
 include MageHand
 
 require 'lib/configuration'
+require 'lib/authorize'
 
 include Chronicler
 
 Configuration.load
-
-# App specific key and secret for access to the API
-CONSUMER_KEY = '3Cvi9vXxnNFO2FfkT0aD'
-CONSUMER_SECRET = 'eVRnQzEOxm6wDrFAZjtN7pGzEy5gi2TzQSfyudPw'
-MageHand::Client.configure(CONSUMER_KEY, CONSUMER_SECRET)
 
 @mage_client = MageHand::Client.new
 
