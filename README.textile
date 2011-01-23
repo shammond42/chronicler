@@ -22,7 +22,7 @@ bc. Put https://www.obsidianportal.com/oauth/authorize?oauth_token=XXXXXXXXXXXXX
 The oauth_token piece willl look different. When you enter the URL, Obsidian Portal will ask if you want to authorize the app. Click Authorize and you will be given an token and a secret. Enter those when prompted.
 
 bc. Enter token: xxxxxxxxxxxxxxxx
-bc. Enter secret: xxxxxxxxxxxxxxxx
+Enter secret: xxxxxxxxxxxxxxxx
 
 This information will be saved and you will be ready to start using chronicler.
 
