@@ -48,7 +48,7 @@ class Configuration
       create_directory
       puts "Created configuration directory." if verbose
     end
-    @@client = MageHand::Client.new
+    @@client = MageHand::Client.new(nil, @@opts[:auth_token], @@opts[:auth_secret])
   end
   
   def self.save!
