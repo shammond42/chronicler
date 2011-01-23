@@ -12,18 +12,9 @@ require 'lib/authorize'
 
 include Chronicler
 
-Configuration.load
+# Load in stored options and parse command line
+Configuration.init
 
-@mage_client = MageHand::Client.new
+self.send(Configuration.requested_command)
 
-@request_token = @mage_client.consumer.get_request_token
-
-puts "Put #{@request_token.authorize_url} in your browser"
-print "Enter token: "
-@auth_token = STDIN.readline.chomp
-print "Enter secret: "
-@auth_secret = STDIN.readline.chomp
-
-Configuration.parameters[:auth_token] = @auth_token
-Configuration.parameters[:auth_secret] = @auth_secret
-Configuration.save
+puts "Done." if Configuration.verbose
