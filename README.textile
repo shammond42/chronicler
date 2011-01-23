@@ -4,6 +4,7 @@ Chronicler is a tool to pull adventure logs from Obsidian Portal and generate an
 
 h1. Dependencies
 
+* oauth -- Gem for OAuth authentication
 * mage-hand -- Ruby gem for accessing the Obsidian Portal API
 * eeepub -- Ruby gem for generating epub files
 
