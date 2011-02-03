@@ -1,7 +1,7 @@
 module Chronicler
   module Publish
     def publish
-      # get authorized user
+      puts Configuration.client.current_user.inspect
       # get campaign
       # get journals
     end

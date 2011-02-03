@@ -1,7 +1,7 @@
 require 'lib/trollop'
 
 class Configuration  
-  SUB_COMMANDS = %w(authorize)
+  SUB_COMMANDS = %w(authorize publish)
   CONFIG_FILE = File.expand_path('~/.chronicler/config.yml')
   CONFIG_DIRECTORY = File.dirname(CONFIG_FILE)
 
@@ -73,12 +73,12 @@ class Configuration
     cmd_opts = case @@requested_command
       when "authorize" # parse delete options
         # no options here
-      when "copy"  # parse copy options
+      when "publish"  # parse copy options
         Trollop::options do
           opt :double, "Copy twice for safety's sake"
         end
       else
-        Trollop::die "unknown subcommand #{@@requested_command}"
+        # Trollop::die "unknown subcommand #{@@requested_command}"
       end
       
       @@opts.merge!(global_opts) if global_opts
