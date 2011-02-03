@@ -4,11 +4,11 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'mage-hand'
-require 'OAuth' # Move this into mage-hand gem
 include MageHand
 
 require 'lib/configuration'
 require 'lib/authorize'
+require 'lib/publish'
 
 include Chronicler
 
