@@ -1,7 +1,7 @@
 module Chronicler
   module Authorize
     def authorize
-      request_token = Configuration.client.consumer.get_request_token(:oauth_callback => 'http://localhost:8000/respond')
+      request_token = Configuration.client.consumer.get_request_token
 
       if Configuration.auth_token && Configuration.auth_secret
         begin
@@ -13,7 +13,7 @@ module Chronicler
       
       puts "Put #{request_token.authorize_url} in your browser"
 
-      print "Enter the supplied pin: "
+      print "Enter the supplied pin (or verifier): "
       pin = STDIN.readline.chomp
       
       access_token = request_token.get_access_token(:oauth_verifier => pin)
