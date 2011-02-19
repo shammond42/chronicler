@@ -1,7 +1,10 @@
 source :gemcutter
 gem 'oauth'
 gem 'json'
-gem 'mage-hand'
+
+# Storing this locall for now.
+# gem 'mage-hand'
+
 gem 'eeepub'
 
 gem 'shoulda'
