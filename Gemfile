@@ -4,3 +4,4 @@ gem 'json'
 gem 'mage-hand'
 gem 'eeepub'
 
+gem 'shoulda'

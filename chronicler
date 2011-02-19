@@ -1,16 +1,6 @@
 #! /usr/local/bin/ruby
 
-require 'rubygems'
-require 'bundler/setup'
-
-require 'mage-hand'
-include MageHand
-
-require 'lib/configuration'
-require 'lib/authorize'
-require 'lib/publish'
-
-include Chronicler
+require 'lib/includes'
 
 # Load in stored options and parse command line
 Configuration.init
