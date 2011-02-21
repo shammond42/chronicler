@@ -1,7 +1,7 @@
 module Chronicler
   module Authorize
     def authorize
-      request_token = Configuration.client.consumer.get_request_token
+      request_token = client.consumer.get_request_token
 
       if Configuration.auth_token && Configuration.auth_secret
         begin

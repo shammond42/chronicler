@@ -3,7 +3,7 @@
 require 'lib/includes'
 
 # Load in stored options and parse command line
-Configuration.init
+init
 
 self.send(Configuration.requested_command)
 
