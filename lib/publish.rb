@@ -7,8 +7,12 @@ module Chronicler
       print "\nSelect the campaign you want to publish: "
       index = STDIN.readline.chomp.to_i - 1
       
-      puts "\nSelected campagin: #{Configuration.client.current_user.campaigns[index].name}"
+      campaign = client.current_user.campaigns[index]
+      puts "\nSelected campagin: #{campaign.name}" if Configuration.verbose
+      puts "Page Count: #{campaign.posts.count}"
       # get campaign
+      
+      
       # get journals
     end
   end
