@@ -10,6 +10,10 @@ module Chronicler
       campaign = client.current_user.campaigns[index]
       puts "\nSelected campagin: #{campaign.name}" if Configuration.verbose
       puts "Page Count: #{campaign.posts.count}"
+      
+      campaign.posts.each do |post|
+        puts post.body
+      end
       # get campaign
       
       
