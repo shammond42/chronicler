@@ -9,10 +9,11 @@ module Chronicler
       
       campaign = client.current_user.campaigns[index]
       puts "\nSelected campagin: #{campaign.name}" if Configuration.verbose
+      puts "Banner URL: #{campaign.banner_image_url}"
       puts "Page Count: #{campaign.posts.count}"
       
-      campaign.posts.each do |post|
-        puts post.body
+      campaign.players.each do |player|
+        puts "#{player.username}: #{player.campaigns.count}"
       end
       # get campaign
       
