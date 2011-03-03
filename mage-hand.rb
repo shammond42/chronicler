@@ -1,1 +1,0 @@
-/Users/shammond/src/op_stats/vendor/gems/mage-hand/lib/mage-hand.rb
