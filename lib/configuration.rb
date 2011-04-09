@@ -75,7 +75,7 @@ class Configuration
         # no options here
       when "publish"  # parse copy options
         Trollop::options do
-          opt :double, "Copy twice for safety's sake"
+          opt :campaign, "Campaign slug", :short => "-c", :type => :string
         end
       else
         # Trollop::die "unknown subcommand #{@@requested_command}"
