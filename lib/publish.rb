@@ -2,20 +2,15 @@ require 'eeepub'
 module Chronicler
   module Publish
     def publish
-      client.current_user.campaigns.each_with_index do |campaign, index|
-        puts "#{index+1}: #{campaign.name} (#{campaign.role_as_title_string})"
+      campaign = if Configuration.campaign
+        Campaign.find_by_slug(Configuration.campaign)
+      else
+        get_campaign_from_current_user
       end
-      print "\nSelect the campaign you want to publish: "
-      index = STDIN.readline.chomp.to_i - 1
-      
-      campaign = client.current_user.campaigns[index]
+
       puts "\nSelected campagin: #{campaign.name}" if Configuration.verbose
       puts "Banner URL: #{campaign.banner_image_url}"
       puts "Page Count: #{campaign.posts.count}"
-      
-      campaign.players.each do |player|
-        puts "#{player.username}: #{player.campaigns.count}"
-      end
 
       File.open("/tmp/title_page.html", "w") do |f|
         f.print "<center>"
@@ -36,12 +31,13 @@ module Chronicler
           f.print "<h2>#{post.post_tagline}</h2>" unless post.post_tagline.nil?
           f.print post.body_html
         end
+        print "."
       end
 
       epub = EeePub.make do
         title       campaign.name
-        creator     campaign.game_master_id # TODO
-        publisher   campaign.game_master_id # TODO
+        creator     campaign.players.map(&:username) << campaign.game_master.username
+        publisher   campaign.game_master.username
         date        Date.today
         identifier  campaign.campaign_url, :scheme => 'URL'
         uid         campaign.id
@@ -50,8 +46,18 @@ module Chronicler
         nav nav_sections
       end
 
-      epub.save("campaign.epub")
+      epub.save("#{campaign.slug}.epub")
     end
+  end
+
+  def get_campaign_from_current_user
+    client.current_user.campaigns.each_with_index do |campaign, index|
+      puts "#{index+1}: #{campaign.name} (#{campaign.role_as_title_string})"
+    end
+    print "\nSelect the campaign you want to publish: "
+    index = STDIN.readline.chomp.to_i - 1
+
+    client.current_user.campaigns[index]
   end
   
   include Chronicler::Publish
