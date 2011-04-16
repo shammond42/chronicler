@@ -6,23 +6,30 @@ module Chronicler
     def fate
       @db = CouchRest.database!("http://127.0.0.1:5984/fate")
       
-      pages = @db.view('fateapp/chapter_leads')
-      
+      # pages = @db.view('fateapp/chapter_leads')
+      book = @db.get("1d70236eaa3ce3b8c72f850b910002c0")
       @dir_name = 'book'
       Dir.mkdir(@dir_name) unless File.exists?(@dir_name)
       File.open("#{@dir_name}/title_page.html", "w") do |f|
-        f.print "<center>"
-        f.print "<h1>Fate RPG</h1>"
-        f.print "</center>"
+        f.puts "<center>"
+        f.puts "<h1>#{book['title']}</h1>"
+        f.puts "<img src=\"#{book['cover-image']}\""
+        f.puts "<h4>Authors: #{book['people']['authors'].join(', ')}</h4>"
+        f.puts "<h4>Editors: #{book['people']['editors'].join(', ')}</h4>"
+        f.puts "<h4>Typesetting: #{book['people']['typesetting'].join(', ')}</h4>"
+        f.puts "<h4>ePub Conversion: #{book['people']['epub conversion'].join(', ')}</h4>"
+        f.puts "<p>#{book['rights']}</p>"
+        f.puts "</center>"
       end
 
       html_files = ["#{@dir_name}/title_page.html"]
       nav_sections = []
 
-      pages['rows'].each do |page|
-        html_files << "book/#{page['id']}.html"
+      book['chapters'].each do |chapter|
+        page = @db.get(chapter)
+        html_files << "book/#{page['_id']}.html"
         File.open(html_files.last, "w") do |f|
-          section_html, section_nav = render_section(page['value'], page['id'])
+          section_html, section_nav = render_section(page, page['_id'])
           f.puts(section_html)
           nav_sections << section_nav if section_nav
         end
@@ -30,12 +37,12 @@ module Chronicler
       puts ''
 
       epub = EeePub.make do
-        title       'Fate RPG'
-        creator     'Steven Hammond'
-        publisher   'Northland Createive Wonders'
-        date        Date.today
-        identifier  'http://www.northpub.com', :scheme => 'URL'
-        uid         'asdfsdf'
+        title       book['title']
+        creator     book['people']['authors'].join(', ')
+        publisher   book['people']['epub conversion']
+        date        Date.today.strftime('%B %d, %Y')
+        identifier  book['identifier'], :scheme => 'URL'
+        uid         book['uid']
 
         files html_files
         nav nav_sections
