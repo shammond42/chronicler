@@ -1,3 +1,6 @@
 Put version number in banner, tied to gem version number
 
+Bootstrapping:
+  Handle missing config file
 
+Move requires to one spot
