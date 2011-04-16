@@ -1,4 +1,3 @@
-require 'eeepub'
 module Chronicler
   module Publish
     def publish
@@ -8,10 +7,13 @@ module Chronicler
         get_campaign_from_current_user
       end
 
-      puts "\nSelected campagin: #{campaign.name}" if Configuration.verbose
-      puts "Banner URL: #{campaign.banner_image_url}"
-      puts "Page Count: #{campaign.posts.count}"
-
+      if Configuration.verbose
+        puts "Campaign ID: #{campaign.id}"
+        puts "\nSelected campagin: #{campaign.name}"
+        puts "Banner URL: #{campaign.banner_image_url}"
+        puts "Page Count: #{campaign.posts.count}"
+      end
+      
       File.open("/tmp/title_page.html", "w") do |f|
         f.print "<center>"
         f.print "<h1>#{campaign.name}</h1>"
@@ -33,6 +35,7 @@ module Chronicler
         end
         print "."
       end
+      puts ''
 
       epub = EeePub.make do
         title       campaign.name

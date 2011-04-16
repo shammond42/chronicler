@@ -1,7 +1,7 @@
 require 'lib/trollop'
 
 class Configuration  
-  SUB_COMMANDS = %w(authorize publish)
+  SUB_COMMANDS = %w(authorize publish fate)
   CONFIG_FILE = File.expand_path('~/.chronicler/config.yml')
   CONFIG_DIRECTORY = File.dirname(CONFIG_FILE)
 
