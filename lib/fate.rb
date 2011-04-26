@@ -11,7 +11,7 @@ module Chronicler
       @dir_name = 'book'
       Dir.mkdir(@dir_name) unless File.exists?(@dir_name)
       File.open("#{@dir_name}/title_page.html", "w") do |f|
-        render_headers(f)
+        render_headers(f, book)
         f.puts "<div style=\"text-align: center\">"
         f.puts "<h1>#{book['title']}</h1>"
         f.puts "<img src=\"#{book['cover-image']}\" />"
@@ -32,8 +32,8 @@ module Chronicler
         html_files << "#{page['_id']}.html"
         File.open("#{@dir_name}/#{html_files.last}", "w") do |f|
           section_html, section_nav = render_section(page, page['_id'])
-          render_headers(f)
-          f.puts(escape_text(section_html))
+          render_headers(f, chapter)
+          f.puts(section_html)
           render_footers(f)
           nav_sections << section_nav if section_nav
         end
@@ -77,12 +77,13 @@ module Chronicler
     ).save('fate_rpg.epub')  
   end
   
-  def render_headers(f)
+  def render_headers(f, chapter)
     f.puts "<?xml version=\"1.0\" encoding=\"windows-1250\"?>"
     f.puts "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"
     \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
     f.puts "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" >"
     f.puts "<head>"
+    f.puts "<title>#{chapter['title']}</title>"
     f.puts "</head>"
     f.puts "<body>"    
   end
@@ -92,8 +93,8 @@ module Chronicler
     f.puts "</html>"    
   end
   
-  def html_id(label)
-    label.downcase.gsub(/[\W]+/,'-')
+  def html_id(label, type='chapter')
+    "#{type}-#{label.downcase.gsub(/[\W]+/,'-')}"
   end
   
   def escape_text(text)
@@ -127,7 +128,7 @@ module Chronicler
       section_html << "#{label_for(section_doc)}"
       section_html << "</h#{section_doc['number'].size}>\n"
     end
-    section_html << section_doc['body']
+    section_html << escape_text(section_doc['body'])
     
     if section_doc['subsections']
       section_doc['subsections'].each do |subsection|
