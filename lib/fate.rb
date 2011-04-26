@@ -101,6 +101,10 @@ module Chronicler
     new_text = text.dup
     new_text.gsub!('<colgroup>','')
     new_text.gsub!('</colgroup>','')
+    new_text.gsub!(/<blockquote( class="\w+")?>/,"<blockquote\\1><div>")
+    new_text.gsub!('</blockquote>','</div></blockquote>')
+    new_text.gsub!(/id="(id\d+)"\s+name="id\d+"/,"id=\"\\1\"")
+    new_text.gsub!('name=','id=')
     new_text.gsub!(/^<col.*/,'')
     new_text.gsub!('–','&mdash;')
     new_text.gsub!('‘','&lsquo;')
