@@ -32,7 +32,7 @@ module Chronicler
         html_files << page_file_name(page)
         File.open("#{@dir_name}/#{html_files.last}", "w") do |f|
           section_html, section_nav = render_section(page, html_files.last)
-          render_headers(f, chapter)
+          render_headers(f, page)
           f.puts(section_html)
           render_footers(f)
           nav_sections << section_nav if section_nav
@@ -87,7 +87,7 @@ module Chronicler
     \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
     f.puts "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" >"
     f.puts "<head>"
-    f.puts "<title>#{chapter['title']}</title>"
+    f.puts "<title>#{page_title(chapter)}</title>"
     f.puts "</head>"
     f.puts "<body>"    
   end
@@ -99,6 +99,14 @@ module Chronicler
   
   def html_id(label, type='chapter')
     "#{type}-#{label.downcase.gsub(/[\W]+/,'-')}"
+  end
+  
+  def page_title(page)
+    if page['number']
+      return "Chapter #{page['number'][0]}: #{page['title']}"
+    else
+      return page['title']
+    end
   end
   
   def escape_text(text)
