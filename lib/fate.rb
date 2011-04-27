@@ -29,9 +29,9 @@ module Chronicler
 
       book['chapters'].each do |chapter|
         page = @db.get(chapter)
-        html_files << "#{page['_id']}.html"
+        html_files << page_file_name(page)
         File.open("#{@dir_name}/#{html_files.last}", "w") do |f|
-          section_html, section_nav = render_section(page, page['_id'])
+          section_html, section_nav = render_section(page, html_files.last)
           render_headers(f, chapter)
           f.puts(section_html)
           render_footers(f)
@@ -57,6 +57,10 @@ module Chronicler
     end
   end
 
+  def page_file_name(page)
+    "chapter-#{page['number'][0]}.html"
+  end
+  
   def generate_epub(book, dir_name, nav_sections, files)
     EeePub::NCX.new(
       :uid => book['uid'],
@@ -122,12 +126,12 @@ module Chronicler
     "#{section_number(section_doc)} #{section_doc['title']}"
   end
   
-  def render_section(section_doc, parent_id)
+  def render_section(section_doc, file_name)
     section_html = ''
 
     unless section_doc['number'].nil?
       nav_section = {:label => label_for(section_doc), :content => 
-        "#{parent_id}.html\##{html_id(label_for(section_doc))}", :nav => []}
+        "#{file_name}\##{html_id(label_for(section_doc))}", :nav => []}
       section_html << "<h#{section_doc['number'].size} id=\"#{html_id(label_for(section_doc))}\">"
       section_html << "#{label_for(section_doc)}"
       section_html << "</h#{section_doc['number'].size}>\n"
@@ -136,7 +140,7 @@ module Chronicler
     
     if section_doc['subsections']
       section_doc['subsections'].each do |subsection|
-        sub_html, sub_nav = render_section(@db.get(subsection), parent_id)
+        sub_html, sub_nav = render_section(@db.get(subsection), file_name)
         section_html << sub_html
         nav_section[:nav] << sub_nav if nav_section && sub_nav
       end
