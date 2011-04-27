@@ -58,7 +58,7 @@ module Chronicler
   end
 
   def page_file_name(page)
-    "chapter-#{page['number'][0]}.html"
+    "chapter-#{'%02d' % page['number'][0]}.html"
   end
   
   def generate_epub(book, dir_name, nav_sections, files)
