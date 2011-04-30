@@ -1,5 +1,3 @@
-require 'couchrest'
-require 'ruby-debug'
 
 module Fate
   def fate(file_name='fate_rpg.epub')
@@ -8,12 +6,14 @@ module Fate
     # pages = @db.view('fateapp/chapter_leads')
     book = @db.get("1d70236eaa3ce3b8c72f850b910002c0")
     @dir_name = 'book'
+    @file_list = []
+    
     Dir.mkdir(@dir_name) unless File.exists?(@dir_name)
     File.open("#{@dir_name}/title_page.html", "w") do |f|
       render_headers(f, book)
       f.puts "<div style=\"text-align: center\">"
       f.puts "<h1>#{book['title']}</h1>"
-      f.puts "<img src=\"#{book['cover-image']}\" />"
+      f.puts "<img src=\"#{get_image(book['cover-image'])}\" alt=\"Cover Image\" />"
       f.puts "<h4>Authors: #{book['people']['authors'].join(', ')}</h4>"
       f.puts "<h4>Editors: #{book['people']['editors'].join(', ')}</h4>"
       f.puts "<h4>Typesetting: #{book['people']['typesetting'].join(', ')}</h4>"
@@ -23,14 +23,14 @@ module Fate
       render_footers(f)
     end
 
-    html_files = ["title_page.html"]
+    @file_list << "title_page.html"
     nav_sections = []
 
     book['chapters'].each do |chapter|
       page = @db.get(chapter)
-      html_files << page_file_name(page)
-      File.open("#{@dir_name}/#{html_files.last}", "w") do |f|
-        section_html, section_nav = render_section(page, html_files.last)
+      @file_list << page_file_name(page)
+      File.open("#{@dir_name}/#{@file_list.last}", "w") do |f|
+        section_html, section_nav = render_section(page, @file_list.last)
         render_headers(f, page)
         f.puts(section_html)
         render_footers(f)
@@ -39,7 +39,7 @@ module Fate
     end
     puts ''
 
-    generate_epub(file_name, book, @dir_name, nav_sections, html_files)
+    generate_epub(file_name, book, @dir_name, nav_sections, @file_list)
     # epub = EeePub.make do
     #   title       book['title']
     #   creator     book['people']['authors'].join(', ')
@@ -58,6 +58,25 @@ end
 
 def page_file_name(page)
   "chapter-#{'%02d' % page['number'][0]}.html"
+end
+
+def get_image(uri)
+  Dir.mkdir('book/images') unless File.exists?('book/images')
+  
+  url = URI.parse(uri)
+  # host = url.sub('http://','').sub(/\/.*/,'')
+  # path = url.sub(/http:\/\/[^\/]+/,'')
+  file_name = "images/" << url.path.split('/').last
+  @file_list << file_name
+  
+  Net::HTTP.start(url.host, url.port) { |http|
+    resp = http.get(url.path)
+    File.open("book/#{file_name}", 'wb') { |file|
+      file.write(resp.body)
+    }
+  }
+  print 'i'
+  return file_name
 end
 
 def generate_epub(file_name, book, dir_name, nav_sections, files)

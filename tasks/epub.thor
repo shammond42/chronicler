@@ -1,7 +1,7 @@
 class Epub < Thor
   require 'lib/thor_includes'
   
-  desc 'fate', 'Generate an epub for the Fate RPG'
+  desc 'build_fate', 'Generate an epub for the Fate RPG'
   def build_fate(file_name='fate_rpg.epub')
     # fate(file_name)
     self.send('fate', file_name)
