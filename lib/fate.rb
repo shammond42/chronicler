@@ -1,6 +1,23 @@
 
 module Fate
-  def fate(file_name='fate_rpg.epub')
+  def parse_fate_source(source_file, db_url)
+    doc = Nokogiri::HTML(File.open(source_file))
+
+    # Search for nodes by css
+    puts doc.css('div.section').size
+
+    sections = []
+    doc.css('div.document > div.section').each do |section|
+      sections << Section.process_dom(section)
+    end
+
+    book = Book.new(doc)
+    Section.store_text(db_url, sections)
+    
+    puts book.save_to_couch(db_url)  
+  end
+  
+  def build_fate_epub(file_name='fate_rpg.epub')
     @db = CouchRest.database!("http://127.0.0.1:5984/fate")
     
     # pages = @db.view('fateapp/chapter_leads')
