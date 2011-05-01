@@ -1,7 +1,7 @@
 class Book
   attr_accessor :book_hash
   
-  def initialize(doc)
+  def initialize(doc, chapters)
     @book_hash = {:type => 'book'}
     
     @book_hash['_id'] = doc.css('div.document')[0].attributes['id'].value
@@ -23,7 +23,8 @@ class Book
         @book_hash['people'][key] = name_list
       end
     end
-    @book_hash['people']['epub_conversion'] = ['Steven Hammond']
+    @book_hash['people']['epub-conversion'] = ['Steven Hammond']
+    @book_hash['chapters'] = chapters
   end
   
   def save_to_couch(db_url)

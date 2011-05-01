@@ -11,9 +11,9 @@ module Fate
       sections << Section.process_dom(section)
     end
 
-    book = Book.new(doc)
-    Section.store_text(db_url, sections)
-    
+    chapters = Section.store_text(db_url, sections)
+
+    book = Book.new(doc, chapters)
     puts book.save_to_couch(db_url)  
   end
   
@@ -21,7 +21,7 @@ module Fate
     @db = CouchRest.database!("http://127.0.0.1:5984/fate")
     
     # pages = @db.view('fateapp/chapter_leads')
-    book = @db.get("1d70236eaa3ce3b8c72f850b910002c0")
+    book = @db.get("sotc-srd")
     @dir_name = 'book'
     @file_list = []
     
@@ -30,11 +30,11 @@ module Fate
       render_headers(f, book)
       f.puts "<div style=\"text-align: center\">"
       f.puts "<h1>#{book['title']}</h1>"
-      f.puts "<img src=\"#{get_image(book['cover-image'])}\" alt=\"Cover Image\" />"
+      f.puts "<img src=\"#{get_image(book['cover-image-url'])}\" alt=\"Cover Image\" />"
       f.puts "<h4>Authors: #{book['people']['authors'].join(', ')}</h4>"
       f.puts "<h4>Editors: #{book['people']['editors'].join(', ')}</h4>"
       f.puts "<h4>Typesetting: #{book['people']['typesetting'].join(', ')}</h4>"
-      f.puts "<h4>ePub Conversion: #{book['people']['epub conversion'].join(', ')}</h4>"
+      f.puts "<h4>ePub Conversion: #{book['people']['epub-conversion'].join(', ')}</h4>"
       f.puts "<p>#{book['rights']}</p>"
       f.puts "</div>"
       render_footers(f)
@@ -144,23 +144,6 @@ def page_title(page)
   end
 end
 
-def escape_text(text)
-  new_text = text.dup
-  new_text.gsub!('<colgroup>','')
-  new_text.gsub!('</colgroup>','')
-  new_text.gsub!(/<blockquote( class="\w+")?>/,"<blockquote\\1><div>")
-  new_text.gsub!('</blockquote>','</div></blockquote>')
-  new_text.gsub!(/id="(id\d+)"\s+name="id\d+"/,"id=\"\\1\"")
-  new_text.gsub!('name=','id=')
-  new_text.gsub!(/^<col.*/,'')
-  new_text.gsub!('–','&mdash;')
-  new_text.gsub!('‘','&lsquo;')
-  new_text.gsub!('’','&rsquo;')
-  new_text.gsub!('“','&ldquo;')
-  new_text.gsub!('”','&rdquo;')
-  new_text.gsub!(/^[\n\r]/,'') # empty lines
-end
-
 def section_number(section_doc)
   section_doc['number'] ? section_doc['number'].join('.') : ''
 end
@@ -179,7 +162,7 @@ def render_section(section_doc, file_name)
     section_html << "#{label_for(section_doc)}"
     section_html << "</h#{section_doc['number'].size}>\n"
   end
-  section_html << escape_text(section_doc['body'])
+  section_html << section_doc['body']
   
   if section_doc['subsections']
     section_doc['subsections'].each do |subsection|

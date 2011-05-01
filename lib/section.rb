@@ -9,7 +9,7 @@ class Section
     section_hash = {
       :number => self.number,
       :title => self.title,
-      :body => self.body
+      :body => escape_text(self.body)
     }
 
     self.subsections.each do |subsection|
@@ -18,6 +18,23 @@ class Section
     end
     
     return db.save_doc(section_hash)['id']
+  end
+  
+  def escape_text(text)
+    new_text = text.dup
+    new_text.gsub!('<colgroup>','')
+    new_text.gsub!('</colgroup>','')
+    new_text.gsub!(/<blockquote( class="\w+")?>/,"<blockquote\\1><div>")
+    new_text.gsub!('</blockquote>','</div></blockquote>')
+    new_text.gsub!(/id="(id\d+)"\s+name="id\d+"/,"id=\"\\1\"")
+    new_text.gsub!('name=','id=')
+    new_text.gsub!(/^<col.*/,'')
+    new_text.gsub!('–','&mdash;')
+    new_text.gsub!('‘','&lsquo;')
+    new_text.gsub!('’','&rsquo;')
+    new_text.gsub!('“','&ldquo;')
+    new_text.gsub!('”','&rdquo;')
+    new_text.gsub!(/^[\n\r]/,'') # empty lines
   end
   
   def self.get_headers(element)
@@ -65,8 +82,11 @@ class Section
 
   def self.store_text(db_url, sections)
     db = CouchRest.database!(db_url)
+    chapter_ids = []
     sections.each do |section|
-        puts section.save_to_couch(db)
-      end
+      chapter_ids << section.save_to_couch(db)
+    end
+    
+    chapter_ids
   end
 end
