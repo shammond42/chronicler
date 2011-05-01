@@ -1,13 +1,15 @@
-require 'rubygems'
-require 'bundler/setup'
+class Thor
+  require 'rubygems'
+  require 'bundler/setup'
 
-require 'net/http'
-require 'uri'
+  require 'net/http'
+  require 'uri'
 
-require 'eeepub'
-require 'couchrest'
+  require 'eeepub'
+  require 'couchrest'
 
-require 'lib/fate'
-require 'lib/helpers'
+  require 'lib/fate'
+  require 'lib/helpers'
 
-include Fate
+  include Fate
+end
