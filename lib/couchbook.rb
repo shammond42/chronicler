@@ -1,4 +1,4 @@
-class Book
+class CouchBook
   attr_accessor :book_hash
   
   def initialize(doc, chapters)

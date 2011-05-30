@@ -13,11 +13,11 @@ module Fate
 
     chapters = Section.store_text(db_url, sections)
 
-    book = Book.new(doc, chapters)
+    book = CouchBook.new(doc, chapters)
     puts book.save_to_couch(db_url)  
   end
   
-  def build_fate_epub(file_name='fate_rpg.epub')
+  def build_epub(file_name='fate_rpg.epub')
     @db = CouchRest.database!("http://127.0.0.1:5984/fate")
     
     # pages = @db.view('fateapp/chapter_leads')

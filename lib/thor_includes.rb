@@ -13,7 +13,7 @@ class Thor
   require 'lib/fate'
   require 'lib/helpers'
   require 'lib/section'
-  require 'lib/book'
+  require 'lib/couchbook'
   
   require 'config/mustache'
   

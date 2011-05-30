@@ -5,9 +5,8 @@ class Fate < Thor
     self.send('parse_fate_source', source_file, db_url)
   end
   
-  desc 'build_fate', 'Generate an epub for the Fate RPG'
-  def build_fate(file_name='fate_rpg.epub')
-    # fate(file_name)
-    self.send('build_fate_epub', file_name)
+  desc 'build_fate_epub', 'Generate an epub for the Fate RPG'
+  def build_fate_epub(file_name='fate_rpg.epub')
+    self.send('build_epub', file_name)
   end
 end
