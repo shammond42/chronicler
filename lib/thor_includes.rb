@@ -8,10 +8,14 @@ class Thor
   require 'eeepub'
   require 'couchrest'
   require 'nokogiri'
+  require 'mustache'
   
   require 'lib/fate'
   require 'lib/helpers'
   require 'lib/section'
   require 'lib/book'
+  
+  require 'config/mustache'
+  
   include Fate
 end
