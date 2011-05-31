@@ -14,6 +14,8 @@ class Thor
   require 'lib/helpers'
   require 'lib/section'
   require 'lib/couchbook'
+  require 'lib/view_helpers'
+  require 'lib/title_page'
   
   require 'config/mustache'
   

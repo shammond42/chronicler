@@ -27,19 +27,15 @@ module Fate
     
     Dir.mkdir(@dir_name) unless File.exists?(@dir_name)
     File.open("#{@dir_name}/title_page.html", "w") do |f|
-      render_headers(f, book)
-      f.puts "<div style=\"text-align: center\">"
-      f.puts "<h1>#{book['title']}</h1>"
-      f.puts "<img src=\"#{get_image(book['cover-image-url'])}\" alt=\"Cover Image\" />"
-      f.puts "<h4>Authors: #{book['people']['authors'].join(', ')}</h4>"
-      f.puts "<h4>Editors: #{book['people']['editors'].join(', ')}</h4>"
-      f.puts "<h4>Typesetting: #{book['people']['typesetting'].join(', ')}</h4>"
-      f.puts "<h4>ePub Conversion: #{book['people']['epub-conversion'].join(', ')}</h4>"
-      f.puts "<p>#{book['rights']}</p>"
-      f.puts "</div>"
-      render_footers(f)
+      title_page = TitlePage.new
+      title_page.title = book['title']
+      title_page.cover_image = book['cover-image-url']
+      @file_list << title_page.cover_image
+      title_page.people = book['people']
+      title_page.rights = book['rights']
+      f.puts title_page.render
     end
-
+    
     @file_list << "title_page.html"
     nav_sections = []
 
@@ -75,25 +71,6 @@ end
 
 def page_file_name(page)
   "chapter-#{'%02d' % page['number'][0]}.html"
-end
-
-def get_image(uri)
-  Dir.mkdir('book/images') unless File.exists?('book/images')
-  
-  url = URI.parse(uri)
-  # host = url.sub('http://','').sub(/\/.*/,'')
-  # path = url.sub(/http:\/\/[^\/]+/,'')
-  file_name = "images/" << url.path.split('/').last
-  @file_list << file_name
-  
-  Net::HTTP.start(url.host, url.port) { |http|
-    resp = http.get(url.path)
-    File.open("book/#{file_name}", 'wb') { |file|
-      file.write(resp.body)
-    }
-  }
-  print 'i'
-  return file_name
 end
 
 def generate_epub(file_name, book, dir_name, nav_sections, files)
