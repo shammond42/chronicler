@@ -109,8 +109,18 @@ def render_footers(f)
   f.puts "</html>"    
 end
 
-def html_id(label, type='chapter')
-  "#{type}-#{label.downcase.gsub(/[\W]+/,'-')}"
+def type(depth)
+  if depth == 1
+    'chapter'
+  else
+    type_string = ''
+    (depth-2).times{type_string << 'sub-'}
+    type_string << 'section'
+  end
+end
+
+def html_id(label, depth=0)
+  "#{type(depth)}-#{label.downcase.gsub(/[\W]+/,'-')}"
 end
 
 def page_title(page)
@@ -122,20 +132,22 @@ def page_title(page)
 end
 
 def section_number(section_doc)
-  section_doc['number'] ? section_doc['number'].join('.') : ''
+  section_doc['number'].size < 4 ? section_doc['number'].join('.') : ''
 end
 
 def label_for(section_doc)
-  "#{section_number(section_doc)} #{section_doc['title']}"
+  label = "#{section_number(section_doc)}"
+  label << ' ' unless label.blank?
+  label << "#{section_doc['title']}"
 end
 
 def render_section(section_doc, file_name)
   section_html = ''
 
-  unless section_doc['number'].nil?
+  unless section_doc['title'].blank?
     nav_section = {:label => label_for(section_doc), :content => 
-      "#{file_name}\##{html_id(label_for(section_doc))}", :nav => []}
-    section_html << "<h#{section_doc['number'].size} id=\"#{html_id(label_for(section_doc))}\">"
+      "#{file_name}\##{html_id(label_for(section_doc), section_doc['number'].size)}", :nav => []}
+    section_html << "<h#{section_doc['number'].size} id=\"#{html_id(label_for(section_doc),section_doc['number'].size)}\">"
     section_html << "#{label_for(section_doc)}"
     section_html << "</h#{section_doc['number'].size}>\n"
   end

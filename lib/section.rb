@@ -9,7 +9,10 @@ class Section
     section_hash = {
       :number => self.number,
       :title => self.title,
-      :body => escape_text(self.body)
+      :body => escape_text(self.body),
+      :tags => ['base', 'pulp', 'ogl'],
+      :type => 'section',
+      :created => Time.now().to_i
     }
 
     self.subsections.each do |subsection|
@@ -47,7 +50,7 @@ class Section
     return section_num 
   end
   
-  def self.process_dom(element)
+  def self.process_dom(element, parent_num = nil, num_subsections = nil)
     section = Section.new
     
     if get_headers(element).count != 1
@@ -58,13 +61,17 @@ class Section
     get_headers(element)[0].remove # remove the header
     
     num_text = strip_section_num!(section.title)
-    section.number = num_text.split('.').map(&:to_i) unless num_text.nil?
+    if num_text.nil?
+      section.number = (parent_num.dup << (?a.ord + num_subsections).chr)
+    else
+      section.number = num_text.split('.').map(&:to_i) unless num_text.nil?
+    end
     
     subsections = element.children.select{|child| (child.name =~ /div/) &&
       (child.attributes['class'].value == 'section')}
     
     subsections.each do |subsection|
-      section.subsections << Section.process_dom(subsection)
+      section.subsections << Section.process_dom(subsection, section.number, section.subsections.size)
       subsection.remove
     end
     section.body = element.inner_html
