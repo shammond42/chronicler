@@ -164,3 +164,4 @@ def render_section(section_doc, file_name)
   return section_html, nav_section
 end
 
+include Fate

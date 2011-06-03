@@ -18,6 +18,4 @@ class Thor
   require 'lib/title_page'
   
   require 'config/mustache'
-  
-  include Fate
 end
