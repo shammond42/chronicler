@@ -1,6 +1,6 @@
-require 'lib/thor_includes'
+require 'lib/chronicle'
 
-class ObPort < Thor
+class ObPort < Chronicle
   class_option :verbose, :type => :boolean, :default => false,
     :desc => 'give detailed descriptions of what is happening.'
     

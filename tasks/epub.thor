@@ -1,5 +1,5 @@
-require 'lib/thor_includes'
-class Epub < Thor
+require 'lib/chronicle'
+class Epub < Chronicle
   desc 'verify', 'Run verifier on an epub file.'
   def verify(file)
     puts "Verifiying #{file}."

@@ -1,6 +1,5 @@
 module ObsidianPortal
   def authorize_web_service
-    load_configuration
     request_token = client.consumer.get_request_token
 
     if config[:auth_token] && config[:auth_secret]
@@ -17,16 +16,9 @@ module ObsidianPortal
     pin = STDIN.readline.chomp
 
     access_token = request_token.get_access_token(:oauth_verifier => pin)
-    Configuration.auth_token = access_token.token
-    Configuration.auth_secret = access_token.secret
-
-    # print "Enter token: "
-    # Configuration.auth_token = STDIN.readline.chomp
-    # print "Enter secret: "
-    # Configuration.auth_secret = STDIN.readline.chomp
-
-    Configuration.save!
-    puts "Saved authorization information." if config[:verbose]
+    config[:auth_token] = access_token.token
+    config[:auth_secret] = access_token.secret
+    # will save info on exit
   end
 end
 

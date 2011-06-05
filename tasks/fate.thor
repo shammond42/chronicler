@@ -1,5 +1,6 @@
-require 'lib/thor_includes'
-class Fate < Thor
+require 'lib/chronicle'
+
+class Fate < Chronicle
   desc 'create_fate_db', 'Parse the original fate rules and put into couchdb.'
   def create_fate_db(source_file, db_url)
     self.send('parse_fate_source', source_file, db_url)
