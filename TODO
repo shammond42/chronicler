@@ -3,6 +3,5 @@ Put version number in banner, tied to gem version number
 Bootstrapping:
   Handle missing config file
 
-Save file name based on id of book document in EPUB.
 Clean up validation errors in generated epub.
 
