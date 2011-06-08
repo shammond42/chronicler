@@ -18,14 +18,18 @@ class Chronicle < Thor
   # of the lib directory.
   require 'lib/ob_port'
   require 'lib/fate'
-  require 'lib/helpers'
   require 'lib/section'
   require 'lib/couchbook'
   require 'lib/view_helpers'
   require 'lib/title_page'
   
+  require_all 'lib/epub'
   require_all 'config'
   
+  # Utility wide thor options
+  class_option :verbose, :type => :boolean, :default => false,
+    :desc => 'give detailed descriptions of what is happening.'
+    
   def initialize(*args)
     super
     load_configuration
