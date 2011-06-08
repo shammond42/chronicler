@@ -1,4 +1,5 @@
 require 'lib/chronicle'
+
 class Epub < Chronicle
   desc 'verify', 'Run verifier on an epub file.'
   def verify(file)
@@ -8,9 +9,9 @@ class Epub < Chronicle
   
   desc 'clean', 'Clean up generated files and directories'
   def clean
-    system 'rm -rf book'
-    puts 'Removed build directory.'
+    system "rm -rf tmp/*"
+    puts 'Removed build directory.' if config[:verbose]
     system 'rm *.epub'
-    puts 'Removed epub files.'
+    puts 'Removed epub files.' if config[:verbose]
   end
 end
