@@ -46,18 +46,6 @@ module ObsidianPortal
     html_files = ["/tmp/title_page.html"]
     nav_sections = []
 
-    # campaign.posts.each do |post|
-    #   html_files << "/tmp/#{post.id}.html"
-    #   label = "#{post.created_at.to_date} - #{post.post_title}"
-    #   nav_sections << {:label => label, :content => "#{post.id}.html"}
-    #   File.open(html_files.last, "w") do |f|
-    #     f.print "<h1>#{label}</h1>"
-    #     f.print "<h2>#{post.post_tagline}</h2>" unless post.post_tagline.nil?
-    #     f.print post.body_html
-    #   end
-    #   print "."
-    # end
-    # puts ''
     campaign.posts.each do |post|
       title = "#{post.created_at.to_date.strftime("%b %d, %Y")}: #{post.post_title}"
       puts "Creating chapter \"#{title}\"." if config[:verbose]
