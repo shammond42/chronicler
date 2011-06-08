@@ -2,6 +2,7 @@ Put version number in banner, tied to gem version number
 
 Bootstrapping:
   Handle missing config file
-
+  Handle missing tmp and book directories
+  
 Clean up validation errors in generated epub.
 

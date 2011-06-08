@@ -5,7 +5,9 @@ module Configuration
       :consumer_key => '3Cvi9vXxnNFO2FfkT0aD',
       :consumer_secret => 'eVRnQzEOxm6wDrFAZjtN7pGzEy5gi2TzQSfyudPw',
       :config_file => File.expand_path('~/.chronicler/config.yml'),
-      :saveable_keys => [:auth_token, :auth_secret]
+      :saveable_keys => [:auth_token, :auth_secret],
+      :temp_dir => 'tmp',
+      :book_dir => 'epubs'
     })
   end
   

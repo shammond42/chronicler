@@ -33,7 +33,7 @@ module ObsidianPortal
       puts "Campaign ID: #{campaign.id}"
       puts "\nSelected campagin: #{campaign.name}"
       puts "Banner URL: #{campaign.banner_image_url}"
-      puts "Page Count: #{campaign.posts.count}"
+      puts "Chapter Count: #{campaign.posts.count}"
     end
     
     File.open("/tmp/title_page.html", "w") do |f|
@@ -46,19 +46,29 @@ module ObsidianPortal
     html_files = ["/tmp/title_page.html"]
     nav_sections = []
 
+    # campaign.posts.each do |post|
+    #   html_files << "/tmp/#{post.id}.html"
+    #   label = "#{post.created_at.to_date} - #{post.post_title}"
+    #   nav_sections << {:label => label, :content => "#{post.id}.html"}
+    #   File.open(html_files.last, "w") do |f|
+    #     f.print "<h1>#{label}</h1>"
+    #     f.print "<h2>#{post.post_tagline}</h2>" unless post.post_tagline.nil?
+    #     f.print post.body_html
+    #   end
+    #   print "."
+    # end
+    # puts ''
     campaign.posts.each do |post|
-      html_files << "/tmp/#{post.id}.html"
-      label = "#{post.created_at.to_date} - #{post.post_title}"
-      nav_sections << {:label => label, :content => "#{post.id}.html"}
-      File.open(html_files.last, "w") do |f|
-        f.print "<h1>#{label}</h1>"
-        f.print "<h2>#{post.post_tagline}</h2>" unless post.post_tagline.nil?
-        f.print post.body_html
-      end
-      print "."
+      title = "#{post.created_at.to_date.strftime("%b %d, %Y")}: #{post.post_title}"
+      puts "Creating chapter \"#{title}\"." if config[:verbose]
+      chapter = Chapter.new(title, post.post_tagline, post.body_html)
+      html_files << chapter.file_path
+      
+      nav_sections << {:label => title, :content => chapter.file_name}
+      print "." unless config[:verbose]
     end
-    puts ''
-
+    puts '' unless config[:verbose]
+    
     epub = EeePub.make do
       title       campaign.name
       creator     campaign.players.map(&:username) << campaign.game_master.username
