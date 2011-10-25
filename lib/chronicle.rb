@@ -17,6 +17,7 @@ class Chronicle < Thor
   # TODO: Turn this into a require_all once obsolete files are refactored out
   # of the lib directory.
   require 'lib/ob_port'
+  require 'lib/ice_dragon_wiki'
   require 'lib/fate'
   require 'lib/section'
   require 'lib/couchbook'

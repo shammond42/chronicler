@@ -21,6 +21,12 @@ module ObsidianPortal
     # will save info on exit
   end
   
+  def show_ob_port_config
+    puts "Obsidian Portal Configuration"
+    puts "Auth Token: #{config[:auth_token] || 'nil'}"
+    puts "Auth Secret: #{config[:auth_secret] || 'nil'}"
+  end
+  
   def publish_web_journals
     puts 'Determining which campaign to use.' if config[:verbose]
     campaign = if config[:campaign]
@@ -71,7 +77,17 @@ module ObsidianPortal
 
     epub.save("#{campaign.slug}.epub")
   end
-  
+
+  def get_campaign_from_current_user
+    op_client.current_user.campaigns.each_with_index do |campaign, index|
+      puts "#{index+1}: #{campaign.name} (#{campaign.role_as_title_string})"
+    end
+    print "\nSelect the campaign you want to publish: "
+    index = STDIN.readline.chomp.to_i - 1
+
+    op_client.current_user.campaigns[index]
+  end
+    
   private
   
   def op_client
@@ -81,16 +97,6 @@ module ObsidianPortal
       @@op_client = MageHand::get_client(nil, config[:auth_token], config[:auth_secret])
     end
     @@op_client
-  end
-  
-  def get_campaign_from_current_user
-    op_client.current_user.campaigns.each_with_index do |campaign, index|
-      puts "#{index+1}: #{campaign.name} (#{campaign.role_as_title_string})"
-    end
-    print "\nSelect the campaign you want to publish: "
-    index = STDIN.readline.chomp.to_i - 1
-
-    op_client.current_user.campaigns[index]
   end
 end
 
