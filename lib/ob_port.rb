@@ -88,7 +88,7 @@ module ObsidianPortal
     op_client.current_user.campaigns[index]
   end
     
-  private
+  # private
   
   def op_client
     unless defined? @@op_client

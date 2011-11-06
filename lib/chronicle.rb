@@ -2,6 +2,8 @@ class Chronicle < Thor
   require 'rubygems'
   require 'bundler/setup'
 
+  require 'ruby-debug'
+  
   require 'require_all'
   require 'net/http'
   require 'uri'
