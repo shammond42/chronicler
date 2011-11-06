@@ -1,6 +1,6 @@
 source :gemcutter
 gem "require_all", "~> 1.2.0"
-gem 'mage-hand', '0.3.2'
+gem 'mage-hand', '0.4.0'
 gem 'eeepub'
 gem 'couchrest'
 gem 'nokogiri'
